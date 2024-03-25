@@ -1,0 +1,233 @@
+/*estilo para el juego del ahorcado*/
+/* tipografía para el título*/
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Doodle+Triangles&display=swap');
+
+/*font-family: 'Rubik Doodle Triangles';*/
+
+/*tipografía para el resto de juego*/
+
+@import url('https://fonts.googleapis.com/css2?family=Preahvihear&display=swap');
+
+/*font-family: 'Preahvihear', sans-serif;*/
+
+* {
+   margin: 0px;
+   padding: 0px;
+   box-sizing: border-box;
+   font-family: 'Preahvihear', sans-serif;
+}
+
+/* estilo para la cabecera y los  pies de la página*/
+header,
+footer {
+   background-color: chocolate;
+   color: white;
+}
+
+header h1 {
+   text-align: center;
+   font-family: 'Rubik Doodle Triangles';
+   padding: 1em;
+   font-size: 2em;
+}
+
+footer h3,
+footer h4 {
+   text-align: center;
+   font-size: 1em;
+   padding: .5em;
+}
+
+main {
+   display: flex;
+}
+
+#visores {
+   width: 30%;
+   border: 2px solid orangered;
+}
+
+#controles {
+   width: 70%;
+   border: 2px solid orangered;
+   padding: 2%;
+}
+
+#visores #visor_1 {
+   height: 500px;
+   border: 1px solid #999;
+   border-radius: 5px;
+   margin: 5px;
+}
+
+#visores #visor_1 img {
+   display: block;
+   margin: 3em auto;
+}
+
+/***estilo para la sección de controles*/
+#controles #visor_2 {
+   height: 60px;
+   background-color: #999;
+   color: black;
+   text-align: center;
+   margin: 5px;
+   border-radius: 5px;
+   border: 1px solid chocolate;
+   font-size: 2em;
+   padding: 10px;
+}
+
+
+/****estilo  para la venta de ganadas y perdidas ****/
+/****de momento oculto la ventana***/
+.ventanamodal {
+   border: 1px solid chocolate;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: rgba(0, 0, 0, 0.8);
+   z-index: 1000;
+   /*ocultar este contenedor utilizaremos la propiedad opacity*/
+   opacity: 0;
+   pointer-events: none;
+   /*transformación de la transparencia al abrir la ventana modal*/
+   transform: opacity 500ms;
+   -webkit-transform: opacity 500ms;
+   -moz-transform: opacity 500ms;
+}
+
+.ventanamodal>div {
+   width: 500px;
+   background-color: chocolate;
+   position: relative;
+   margin: 10% auto;
+   border-radius: 7px;
+   padding: 30px;
+   color: white;
+   box-shadow: 17px 23px 16px -2px rgba(0, 0, 0, 0.75);
+   -webkit-box-shadow: 17px 23px 16px -2px rgba(0, 0, 0, 0.75);
+   -moz-box-shadow: 17px 23px 16px -2px rgba(0, 0, 0, 0.75);
+}
+
+/*estilo para el botón cerrar de la ventana modal*/
+.ventanamodal a[href="#cerrar"] {
+   position: absolute;
+   top: 0;
+   right: 0;
+   color: transparent;
+}
+
+/*en lugar del texto quiero mostrar una X para ello voy a utilizar la pseudoclase :after*/
+.ventanamodal a[href="#cerrar"]:after {
+   content: 'X';
+   display: block;
+   position: absolute;
+   top: -10px;
+   right: -10px;
+   width: 2em;
+   background-color: chocolate;
+   color: white;
+   text-align: center;
+   border-radius: 20px;
+   border: 3px solid #fff;
+   font-weight: bold;
+}
+
+/*aplicar ocultación de ventana*/
+.ventanamodal:target {
+   opacity: 1;
+   pointer-events: auto;
+}
+
+/*animación de la ventana modal*/
+.ventanamodal:target>div {
+   animation: mostrarventana ease-in 5000ms;
+
+}
+
+/*para definir la animación */
+@keyframes mostrarventana {
+   0% {
+      transform: scale(1.1, 1.1);
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+   }
+
+   50% {
+      transform: scale(1.8, 1.8);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+   }
+
+   75% {
+      transform: scale(0.95, 0.95);
+      box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);
+   }
+
+   100% {
+      transform: scale(1, 1);
+      box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+   }
+
+}
+
+/*estilo para el teclado*/
+#teclado {
+   margin-top: 1em;
+   margin-bottom: 1em;
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: space-around;
+}
+
+#teclado input[type="button"] {
+   width: 55px;
+   height: 55px;
+   margin: 5px;
+}
+
+#abecedario #botones {
+   border: 1px solid chocolate;
+   display: block;
+   width: 100%;
+   padding: 1em;
+}
+
+#abecedario #botones input[type="button"] {
+   background-color: chocolate;
+   color: white;
+   font-size: 1.2em;
+   margin: 1em;
+   padding: 1em;
+   border: 1px solid #333;
+   border-radius: 5px;
+}
+
+#abecedario #botones input[type="text"] {
+   width: 150px;
+   height: 50px;
+   border: 2px solid chocolate;
+   text-align: center;
+   font-size: 2em;
+}
+
+/*estilo para el nuevo botón ver resultado*/
+#abecedario #botones a[href="#visor_letras"] {
+   width: 300px;
+   display: block;
+   background-color: chocolate;
+   color: white;
+   font-size: 1.2em;
+   margin: 1em;
+   padding: 1em;
+   border: 1px solid #333;
+   border-radius: 5px;
+   text-decoration: none;
+   float: right;
+   text-align: center;
+   /*ocultar el botón y desactivar el evento del mouse sobre el enlace*/
+   opacity: 0;
+   pointer-events: none;
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Ahorcado</title>
+    <link rel="stylesheet" href="style/ahorcado.css">
+    <script>
+        //definición de las variables
+        //Array para cargar las imágenes del ahorcado
+        var hombre=new Array("image/cabeza.png", "image/cuello.png", "image/brazoiza.png", "image/brazoizqdcha.png", "image/piernadcha.png", "image/ahorcado.png");
+        //Array para contener la lista de palabras
+        var listapalabras=new Array("multimedia", "internauta", "servidor","protocolo", "cortafuegos","navegador", "video", "audio");
+        //Array con la lista de las letras
+        var listaletras=new Array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","Y","X","Z");
+        //otras variables globales
+        var fallos=0; //contar el número de fallos
+        var ganadas=0;//variable para contar las partidas ganadas
+        var contarperdidas=0;//variable para contar las partidas perdidas
+        var jugando=false;//control si estamos jugando
+        //contador para las partes del cuerpo del ahorcado
+        var partes=0;
+        //variable para guardar la palabra seleccionada
+        var cadena=new String("");
+        var aciertos=new String;
+        var noacertadas=new String;//para almacenar las letras no acertadas
+        var letraencontrada=false;
+        //definición de las funciones del juego
+         // esta función incializa los contadores del juego
+        function borrar(){
+            ganadas=0;
+            contarperdidas=0;
+            document.getElementById("ganadas").value=ganadas;//caja de ganadas a 0
+            document.getElementById("perdidas").value=contarperdidas;// caja de perdidas a 0
+            //desactiva todo el teclado
+            for(var i=0;i<listaletras.length;i++){
+                    document.getElementById(listaletras[i]).disabled=true;
+             }
+             //visor de palabra vacio
+             document.getElementById("visor_2").innerHTML="";
+        }
+
+        //función iniciar jugada se ejecutara una vez que ha finalizado la partida anterior pierda o gane el jugador
+        function IniciarJugada(){
+            fallos=0;
+            jugando=false;
+            cadena=new String("");
+            letraencontrada=false;
+            document.getElementById("visor_1dibujo").src="image/portada.png";
+            //para activar nuevamente todas las letras del teclado
+                for(var i=0;i<listaletras.length;i++){
+                    document.getElementById(listaletras[i]).disabled=false;
+                }
+            //una vez que está todo inicializado llamamos a la función Obtener Palabra.
+            ObtenerPalabra();
+        }
+
+        //función ObtenerPalabra se encargará de generar un indice aleatoriamente que me permita sacar una palabra del array listapalabras y dibujar en el visor tantos guiones bajos como letras tenga mi palabra.
+        function ObtenerPalabra(){
+            //generar aleatoriamente un indice para extraer la palabra del array utilizamos Math.random()
+           // var indice=Math.floor(Math.random()*listapalabras.length);
+           // console.log(indice);
+            var indice=Math.round(Math.random()*listapalabras.length);
+            console.log(indice);
+            //extraemos del array listapalabras la palabra y la guardamos en cadena
+            cadena=listapalabras[indice];
+            console.log(cadena);
+            //pasar toda la cadena a mayúsculas
+            cadena=cadena.toUpperCase();
+            console.log(cadena);
+            //añadir tantos guiones bajos como letras tiene la palabra que tenemos ya almacenada en cadena
+            var guiones=new String;
+            for(var x=0; x<cadena.length;x++){
+                guiones=guiones+"_ ";
+            }
+            aciertos=guiones.split(" ");
+            console.log(aciertos);
+            jugando=true;
+            //función que dibujará en el visor los guiones letras que ya he acertado
+            dibujarpalabra(aciertos);
+        }
+
+        //función que dibuja la palabra con guiones o las letras acertadas
+        function dibujarpalabra(aciertos){
+            //en aciertos tendre incialmente los guiones tantos como letras y según se ejecute el juego tendré las letras acertadas
+            guiones="";
+            for( var x=0; x<aciertos.length; x++){
+                guiones=guiones+aciertos[x]+" ";
+            }
+            document.getElementById("visor_2").innerHTML=guiones;
+        }
+        //función jugar recibe como argumentos el formulario y la letra pulsada
+        function jugar(visor,letra){
+            //desactivar la tecla pulsada
+             document.getElementById(letra).disabled=true;
+            //inicializamos letraencontrada a false ya que aun no la hemos comparado
+             letraencontrada=false;
+            if(jugando){
+                //recorro la cadena original y comparo con la letra pulsada que está almacenada en letra
+                for(var x=0; x<cadena.length; x++){
+                    if(letra==cadena[x]){
+                        aciertos[x]=cadena[x];
+                        letraencontrada=true;
+                    }
+                    }
+                    //almacena el array de noacertadas
+                    if(!letraencontrada){
+                        noacertadas+=letra;
+                    }
+                
+                dibujarpalabra(aciertos);
+                if(!letraencontrada && (fallos<hombre.length)){
+                    document.getElementById("visor_1dibujo").src=hombre[fallos];
+                    fallos++;
+                }
+                // cosas para mejorar//
+                if(fallos>=hombre.length){
+                    contarperdidas++;
+                    document.getElementById("perdidas").value=contarperdidas;
+                    for(var i=0;i<listaletras.length;i++){
+                    document.getElementById(listaletras[i]).disabled=true;
+                 }
+                    
+                    document.getElementById("ventanaresultado").innerHTML=`<p>Palabra: ${cadena} </p><p>Letras Acertadas: ${aciertos}</p><p>Letras no acertadas: ${noacertadas}</p>`;
+                    document.getElementById("botonver").style.opacity="1";
+                    document.getElementById("botonver").style.pointerEvents="All";
+                    //añadimos la información resumen del juego en el contenedor html llamado ventanaresultado.
+                    /* 1. listado de letras no acertadas
+                       2. listado de letras acertadadas
+                       3. la palabra que debíamos adivinar*/
+
+                    /* lo haremos a través de una función llamada mostrarmodal*/
+                    
+                    /*debe crear el código necesario para poder cerrar la ventana modal y dejar visible la ventana de juego*/
+           
+                }
+          
+                if(aciertos.indexOf("_")==-1){
+                    ganadas++;
+                    document.getElementById("ventanaresultado").innerHTML=`<p>Palabra: ${cadena} </p><p>Letras Acertadas: ${aciertos}</p><p>Letras no acertadas: ${noacertadas}</p>`;
+                    document.getElementById("botonver").style.opacity="1";
+                    document.getElementById("botonver").style.pointerEvents="All";
+                    document.getElementById("ganadas").value=ganadas;
+                    for(var i=0;i<listaletras.length;i++){
+                    document.getElementById(listaletras[i]).disabled=true;
+                    }
+                    
+            
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Juego del Ahorcado</h1>
+    </header>
+    <main>
+        <section id="visores">
+            <!--visor_1 en este contenedor iremos mostrando las partes del muñeco según los fallos del jugador-->
+            <article id="visor_1">
+                <img id="visor_1dibujo" src="image/portada.PNG" alt="Portada de inicio del juego">
+            </article>
+        </section>
+        <section id="controles">
+            <!--visor_2 aquí mostraremos tanta lineas como letras tenga la palabra y nos servirá para mostrar las letras acertadas-->
+            <article id="visor_2"></article>
+            <!--visor para mostrar si ha ganado o ha perdido  mediante una ventana emergente o modal-->
+            <article id="visor_letras" class="ventanamodal">
+                  <div>
+                      <h3>Resultado de la partida</h3>
+                      <article id="ventanaresultado"></article>
+                      <a href="#cerrar" title="Cerrar">Cerrar</a>
+                      <!--este enlace hará las funciones de botón cerrar-->
+                  </div>
+            </article>
+            <!--las letras se desactivan una vez pulsadas, así el jugador sabra que letras le quedan por elegir-->
+            <form id="abecedario">
+                <section id="teclado">
+                    <input type="button" id="A" value="A" size="3" onclick="jugar(this.form,'A');">
+                    <input type="button" id="B" value="B" size="3" onclick="jugar(this.form,'B');">
+                    <input type="button" id="C" value="C" size="3" onclick="jugar(this.form,'C');">
+                    <input type="button" id="D" value="D" size="3" onclick="jugar(this.form,'D');">
+                    <input type="button" id="E" value="E" size="3" onclick="jugar(this.form,'E');">
+                    <input type="button" id="F" value="F" size="3" onclick="jugar(this.form,'F');">
+                    <input type="button" id="G" value="G" size="3" onclick="jugar(this.form,'G');">
+                    <input type="button" id="H" value="H" size="3" onclick="jugar(this.form,'H');">
+                    <input type="button" id="I" value="I" size="3" onclick="jugar(this.form,'I');">
+                    <input type="button" id="J" value="J" size="3" onclick="jugar(this.form,'J');">
+                    <input type="button" id="K" value="K" size="3" onclick="jugar(this.form,'K');">
+                    <input type="button" id="L" value="L" size="3" onclick="jugar(this.form,'L');">
+                    <input type="button" id="M" value="M" size="3" onclick="jugar(this.form,'M');">
+                    <input type="button" id="N" value="N" size="3" onclick="jugar(this.form,'N');">
+                    <input type="button" id="Ñ" value="Ñ" size="3" onclick="jugar(this.form,'Ñ');">
+                    <input type="button" id="O" value="O" size="3" onclick="jugar(this.form,'O');">
+                    <input type="button" id="P" value="P" size="3" onclick="jugar(this.form,'P');">     
+                    <input type="button" id="Q" value="Q" size="3" onclick="jugar(this.form,'Q');">
+                    <input type="button" id="R" value="R" size="3" onclick="jugar(this.form,'R');">
+                    <input type="button" id="S" value="S" size="3" onclick="jugar(this.form,'S');">
+                    <input type="button" id="T" value="T" size="3" onclick="jugar(this.form,'T');">     
+                    <input type="button" id="U" value="U" size="3" onclick="jugar(this.form,'U');">
+                    <input type="button" id="V" value="V" size="3" onclick="jugar(this.form,'V');">
+                    <input type="button" id="W" value="W" size="3" onclick="jugar(this.form,'W');">
+                    <input type="button" id="X" value="X" size="3" onclick="jugar(this.form,'X');">     
+                    <input type="button" id="Y" value="Y" size="3" onclick="jugar(this.form,'Y');">
+                    <input type="button" id="Z" value="Z" size="3" onclick="jugar(this.form,'Z');">
+                </section>
+                <fieldset id="botones">
+                    <legend>Control de juego</legend>
+                    <input type="button" value="Nuevo Juego" size="13" onclick="IniciarJugada();">
+                    <input type="button" value="Borrar" size="13" onclick="borrar();">
+                    <!--añadimos un botón llamado ver resultado que me permitirá mostrar en la ventana modal el resultado de la partida-->
+                    <!--<input type="button" value="Ver Resultado" size="13" onclick="VerResultado();">-->
+                    <a id="botonver" href="#visor_letras">Ver Resultado</a>
+                    <input type="text" name="ganadas" id="ganadas" placeholder="0">
+                    <input type="text" name="perdidas" id="perdidas" placeholder="0">
+                </fieldset>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <h4>Ejercicio Realizado en clase 18/12/2023</h4>
+        <h3>Objeto String y sus métodos</h3>
+    </footer>
+</body>
+</html>
